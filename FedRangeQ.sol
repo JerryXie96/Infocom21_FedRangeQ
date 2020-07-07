@@ -17,13 +17,24 @@ contract FedRangeQ{
         bytes[16] ciphertext;   // the ciphertext of each block [the number of blocks]
     }
     
-    IndexStru[] index;
-    uint[] results;
+    IndexStru[] index;  // the index in blockchain
+    uint[] result;     // the matching result
     
+    // store the uploaded index in blockchain, indexToBeAdded is a list which includes some index items
     function store(IndexStru[] memory indexToBeAdded) public {
-        for(uint i=0;i<indexToBeAdded.length;i++){
+        for(uint i=0;i<indexToBeAdded.length;i++){ // store the index one by one
             index.push(indexToBeAdded[i]);
         }
+    }
+    
+    // return the matching result
+    function getResult() public view returns(uint[] memory){
+        return result;
+    }
+    
+    // clear the matching result
+    function clearResult() public{
+        delete result;
     }
     
 }
