@@ -1,0 +1,85 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"components": [
+					{
+						"name": "pubKey",
+						"type": "bytes"
+					},
+					{
+						"name": "tag",
+						"type": "uint8[16]"
+					},
+					{
+						"name": "ciphertext",
+						"type": "bytes[16]"
+					}
+				],
+				"name": "query",
+				"type": "tuple"
+			}
+		],
+		"name": "search",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"components": [
+					{
+						"name": "label",
+						"type": "uint256"
+					},
+					{
+						"name": "pubKey",
+						"type": "bytes[16]"
+					},
+					{
+						"name": "tag",
+						"type": "uint8[3][3][16]"
+					},
+					{
+						"name": "ciphertext",
+						"type": "bytes[3][16]"
+					}
+				],
+				"name": "indexToBeAdded",
+				"type": "tuple[]"
+			}
+		],
+		"name": "store",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "clearResult",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getResult",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

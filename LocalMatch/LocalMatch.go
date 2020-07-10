@@ -104,7 +104,7 @@ func indexBlockEnc(block int64, prefix int64, id int, blockId int) {
 }
 
 // indexEnc: encrypt one value as an index item (v: the value to be encrypted, id: the current index number)
-func indexEnc(v uint32, id int) {
+func indexItemEnc(v uint32, id int) {
 	vStr := strconv.FormatInt(int64(v), 2) // calculate the binary value
 	vStr = fmt.Sprintf("%032s", vStr)      // pad to 32 bits
 	var prefix int64
@@ -190,11 +190,11 @@ func main() {
 	g2s = new(bn256.G2).ScalarBaseMult(s)
 
 	// add the index items
-	indexEnc(500, 0)
-	indexEnc(85, 1)
-	indexEnc(3, 2)
-	indexEnc(150, 3)
-	indexEnc(329, 4)
+	indexItemEnc(500, 0)
+	indexItemEnc(85, 1)
+	indexItemEnc(3, 2)
+	indexItemEnc(150, 3)
+	indexItemEnc(329, 4)
 
 	// generate the query
 	queryEnc(500)
