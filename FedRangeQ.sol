@@ -47,7 +47,7 @@ contract FedRangeQ{
                     uint8 id=index[i].tag[j][query.tag[j]][k];   // get the id in ciphertext array
                     
                     // use the bn256 bilinear map
-                    bytes memory input=abi.encodePacked(query.pubKey,index[i].ciphertext[j][id],index[i].pubKey[j],query.ciphertext[j]);    // pack the bytes data
+                    bytes memory input=abi.encodePacked(index[i].ciphertext[j][id],query.pubKey,index[i].pubKey[j],query.ciphertext[j]);    // pack the bytes data
                     uint[1] memory output;  // to store the bilinear result
                     uint length=input.length;
                     assembly{

@@ -1,3 +1,11 @@
+/*
+	FedRangeQ.go
+	By Hongcheng Xie at Department of Computer Science, City University of Hong Kong, Hong Kong SAR, China
+
+	This code is the blockchain client in our proposed system, including index encrypting module, index posting module, query encrypting module, query posting module and searching module.
+
+	Due to the block size limit in go-ethereum, the code between Line 518 and Line 520 in core/tx_pool.go of go-ethereum should be commented and re-compiled ("make" in project root directory) before deploying our proposed system.
+*/
 package main
 
 import (
@@ -29,7 +37,8 @@ type TestData struct {
 var (
 	fileName       string         = "preprocessedList.csv"     // the filename of csv file
 	testData       [2000]TestData                              // the original data for our experiment (the top 2000 items)
-	indexSize      int            = 5                          // the size of index
+	indexSize      int            = 2000                       // the size of index
+	batchSize      int            = 100                        // the batch size of one post
 	blockSize      int            = 2                          // the number of bits in one block
 	index          []Struct0      = make([]Struct0, indexSize) // the encrypted index corresponding to IndexStru in smart contract
 	g1s            *bn256.G1                                   // the key of index
@@ -39,7 +48,7 @@ var (
 	query          Struct1                                     // the encrypted query corresponding to QueryStru in smart contract
 
 	url           string = "http://localhost:8545"                                            // the access URL of the test chain
-	scAddress     string = "0x660c2Ae2D2c943b2bcAB77C510300F20cb19aC73"                       // the address of smart contract
+	scAddress     string = "0x73492c6B126ebA12A3F1972EdB9aCBfDc58c58FB"                       // the address of smart contract
 	privateKeyStr string = "fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19" // the private key of blockchain account
 )
 
@@ -179,7 +188,6 @@ func indexEnc() {
 }
 
 func indexPost(instance *FedRangeQABI, auth *bind.TransactOpts, conn *ethclient.Client) {
-	var batchSize int = 1 // the batch size of one post
 	for i := 0; i < len(index)/batchSize; i++ {
 		tx, err := instance.Store(auth, index[i*batchSize:i*batchSize+batchSize])
 		if err != nil {
@@ -269,14 +277,26 @@ func main() {
 	fmt.Println("Privatekey Settled")
 	auth := bind.NewKeyedTransactor(privateKey) // bind the account
 	auth.Nonce = nil
-	auth.Value = big.NewInt(0) // in wei
-	auth.GasLimit = uint64(0)  // in units
+	auth.Value = big.NewInt(0)          // in wei
+	auth.GasLimit = uint64(80000000000) // in units
 	auth.GasPrice = big.NewInt(0)
 
 	// the main procedure
-	indexEnc()                                  // encrypt the index
-	indexPost(instance, auth, client)           // post the index to the test chain
-	queryEnc(uint32(testData[1000].Price))      // generate the query
+	fmt.Println("Index Encryption begins")
+	indexEnc() // encrypt the index
+	fmt.Println("Index Encryption done")
+
+	fmt.Println("Post begins")
+	indexPost(instance, auth, client) // post the index to the test chain
+	fmt.Println("Post done")
+
+	fmt.Println("Query Encryption begins")
+	queryEnc(uint32(testData[1000].Price)) // generate the query
+	fmt.Println("Query Encryption done")
+
+	fmt.Println("Searching begins")
 	fmt.Println(search(instance, auth, client)) // print the list of matched values
-	clearResult(instance, auth, client)         // clear the on-chain result list
+	fmt.Println("Searching Done")
+
+	clearResult(instance, auth, client) // clear the on-chain result list
 }
