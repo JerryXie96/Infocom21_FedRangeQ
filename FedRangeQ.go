@@ -37,7 +37,7 @@ type TestData struct {
 var (
 	fileName       string         = "preprocessedList.csv"     // the filename of csv file
 	testData       [2000]TestData                              // the original data for our experiment (the top 2000 items)
-	indexSize      int            = 2000                       // the size of index
+	indexSize      int            = 400                        // the size of index
 	batchSize      int            = 100                        // the batch size of one post
 	blockSize      int            = 2                          // the number of bits in one block
 	index          []Struct0      = make([]Struct0, indexSize) // the encrypted index corresponding to IndexStru in smart contract
@@ -48,7 +48,7 @@ var (
 	query          Struct1                                     // the encrypted query corresponding to QueryStru in smart contract
 
 	url           string = "http://localhost:8545"                                            // the access URL of the test chain
-	scAddress     string = "0x73492c6B126ebA12A3F1972EdB9aCBfDc58c58FB"                       // the address of smart contract
+	scAddress     string = "0x48b46e4768cB981ebE9bCaF4992d26CE37CCD9b2"                       // the address of smart contract
 	privateKeyStr string = "fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19" // the private key of blockchain account
 )
 
@@ -246,6 +246,7 @@ func search(instance *FedRangeQABI, auth *bind.TransactOpts, conn *ethclient.Cli
 		fmt.Println(err)
 	}
 	res, _ := instance.GetResult(nil)
+	fmt.Println(receipt.GasUsed)
 	return res
 }
 
@@ -277,8 +278,8 @@ func main() {
 	fmt.Println("Privatekey Settled")
 	auth := bind.NewKeyedTransactor(privateKey) // bind the account
 	auth.Nonce = nil
-	auth.Value = big.NewInt(0)          // in wei
-	auth.GasLimit = uint64(80000000000) // in units
+	auth.Value = big.NewInt(0)                  // in wei
+	auth.GasLimit = uint64(1844674407370955300) // in units
 	auth.GasPrice = big.NewInt(0)
 
 	// the main procedure
@@ -296,6 +297,7 @@ func main() {
 
 	fmt.Println("Searching begins")
 	fmt.Println(search(instance, auth, client)) // print the list of matched values
+
 	fmt.Println("Searching Done")
 
 	clearResult(instance, auth, client) // clear the on-chain result list
