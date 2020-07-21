@@ -16,9 +16,7 @@ Dataset: https://old.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchan
 
 preprocess.csv: the preprocessed data
 
-
-
-In the folder of each code version:
+### In the folder of each code version:
 
 FedRangeQ.go: the client of the proposed system
 
