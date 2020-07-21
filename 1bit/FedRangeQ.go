@@ -2,7 +2,7 @@
 	FedRangeQ.go
 	By Hongcheng Xie at Department of Computer Science, City University of Hong Kong, Hong Kong SAR, China
 
-	This code is the blockchain client in our proposed system, including index encrypting module, index posting module, query encrypting module, query posting module and searching module.
+	This code is the blockchain client in our proposed system, including index encrypting module, index posting module, query encrypting module, query posting module and searching module. In this source code, the block size is set as 4.
 
 	Due to the block size limit in go-ethereum, the code between Line 518 and Line 520 in core/tx_pool.go of go-ethereum should be commented and re-compiled ("make" in project root directory) before deploying our proposed system.
 */
@@ -35,17 +35,17 @@ type TestData struct {
 }
 
 var (
-	fileName       string         = "preprocessedList.csv"     // the filename of csv file
-	testData       [2000]TestData                              // the original data for our experiment (the top 2000 items)
+	fileName       string         = "../preprocessedList.csv"  // the filename of csv file
+	testData       [3500]TestData                              // the original data for our experiment (the top 2000 items)
 	indexSize      int            = 400                        // the size of index
 	batchSize      int            = 100                        // the batch size of one post
-	blockSize      int            = 2                          // the number of bits in one block
-	index          []Struct0      = make([]Struct0, indexSize) // the encrypted index corresponding to IndexStru in smart contract
+	blockSize      int            = 1                          // the number of bits in one block
+	index          []Struct1      = make([]Struct1, indexSize) // the encrypted index corresponding to IndexStru in smart contract
 	g1s            *bn256.G1                                   // the key of index
 	g2s            *bn256.G2                                   // the key of query
 	tPLength       int64                                       // the length of array tagPos
 	blockPossValue int64                                       // the number of possible values in one block (2**blockSize)
-	query          Struct1                                     // the encrypted query corresponding to QueryStru in smart contract
+	query          Struct0                                     // the encrypted query corresponding to QueryStru in smart contract
 
 	url           string = "http://localhost:8545"                                            // the access URL of the test chain
 	scAddress     string = "0x48b46e4768cB981ebE9bCaF4992d26CE37CCD9b2"                       // the address of smart contract
@@ -68,7 +68,7 @@ func readCSV() {
 		testData[i].StockID = row[1]
 		testData[i].Price, _ = strconv.Atoi(row[2]) // convert the string in csv file to int
 		i++
-		if i >= 2000 { // read the top 2000 items in original data
+		if i >= 3500 { // read the top 3500 items in original data
 			break
 		}
 	}
@@ -241,12 +241,10 @@ func search(instance *FedRangeQABI, auth *bind.TransactOpts, conn *ethclient.Cli
 	}
 	ctx := context.Background()
 	receipt, err := bind.WaitMined(ctx, conn, tx)
-	fmt.Println("status: ", receipt.Status)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Status: ", receipt.Status, " ", "Error:", err)
 	}
 	res, _ := instance.GetResult(nil)
-	fmt.Println(receipt.GasUsed)
 	return res
 }
 
@@ -292,12 +290,11 @@ func main() {
 	fmt.Println("Post done")
 
 	fmt.Println("Query Encryption begins")
-	queryEnc(uint32(testData[1000].Price)) // generate the query
+	queryEnc(uint32(1000000000)) // generate the query
 	fmt.Println("Query Encryption done")
 
 	fmt.Println("Searching begins")
 	fmt.Println(search(instance, auth, client)) // print the list of matched values
-
 	fmt.Println("Searching Done")
 
 	clearResult(instance, auth, client) // clear the on-chain result list

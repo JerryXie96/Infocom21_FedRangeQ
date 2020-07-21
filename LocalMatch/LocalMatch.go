@@ -1,4 +1,4 @@
-// this source code is to test the matching algorithm locally
+// this source code is to test the matching algorithm locally. this is the 2-bit version.
 package main
 
 import (
